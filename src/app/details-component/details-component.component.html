@@ -1,0 +1,38 @@
+<div *ngIf="todosinformation">
+  <h2>CRUD Operation</h2>
+  <div> <label>userId: </label>{{todosinformation.userId}}</div>
+  <div><label>id: </label>{{todosinformation.id}}</div>
+  <div><label>title: </label>{{todosinformation.title}}</div>
+  <div>
+    <label>status: </label>
+    <div class="checkbox">
+      <input type="checkbox" id="true">
+      <label for="true">{{!todosinformation.completed}}</label>
+    </div>
+    <button (click)="save(Person)">Save</button>
+    <button (click)="goBack()">Back</button>
+    <!-- <input [(ngModel)]="todosinformation.completed" placeholder="completed or not" /> -->
+  </div>
+</div>
+
+
+<!-- <div *ngIf="userinformation"  class="maruthu col-xs-4 flex-xs-middle">
+  <h2>{{userinformation.name}} details!</h2>
+  <div><label>id: </label>{{userinformation.phone}}</div>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="userinformation.name" placeholder="name" />
+  </div>
+  <button (click)="save(Person)">Save</button>
+  <button (click)="goBack()">Back</button>
+</div> -->
+
+
+<!-- <div class="modal">
+  <div class="modal-dialog modal-lg" role="dialog" aria-hidden="true">
+      <div class="modal-content">
+          Hi i am maruthu Pandi s/o n. balasubramanian ayyankottai pattiveeranpatti post dindigul 
+      </div>
+  </div>
+</div>
+<div class="modal-backdrop" aria-hidden="true"></div> -->

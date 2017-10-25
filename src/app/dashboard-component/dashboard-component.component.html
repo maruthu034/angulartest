@@ -1,0 +1,21 @@
+
+<h1>{{title | uppercase}}</h1>
+<div class="main-container">
+  <div class="row">
+    <div *ngFor="let user of _userArray"  [class.selected]="selectedUser"  class="col-lg-4 col-md-6 col-sm-4 col-xs-4">
+      <div class="card">
+        <div class="card-block">
+          <h3 class="card-title">{{user.name}}</h3>
+          <p class="card-text">
+            <b>{{user.website}}</b>
+          </p>
+        </div>
+        <div class="card-footer">
+          <a (click)="onSelect(user)"  [routerLink]="['/detail', user.id]" class="btn btn-primary">View Todos</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <app-details-component [userinformation]="selectedUser"></app-details-component> -->
