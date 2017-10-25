@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Userinformation } from '../interfaces/carddetails';
+import { Userinformation } from '../services/carddetails';
 import { ApiService } from '../services/apiservices';
 import { Router } from '@angular/router';
 
@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponentComponent implements OnInit {
   title = 'Dashboard';
-  _userArray: Userinformation[];
-  selectedUser: Userinformation;
+  userArray: Userinformation[];
 
   constructor(private apiSerivce: ApiService, private router: Router) {
   }
@@ -20,7 +19,7 @@ export class DashboardComponentComponent implements OnInit {
   getPosts(): void {
     this.apiSerivce.getUserInformation()
       .subscribe(
-      resultArray => this._userArray = resultArray,
+      resultArray => this.userArray = resultArray,
       error => console.log('Error :: ' + error)
       );
   }
@@ -28,9 +27,7 @@ export class DashboardComponentComponent implements OnInit {
   ngOnInit(): void {
     this.getPosts();
   }
-  onSelect(user: Userinformation): void {
+  onSelect(): void {
     this.router.navigateByUrl('/todos');
-    // this.selectedUser = user;
-    // console.log('maruthu:', this.selectedUser);
   }
 }

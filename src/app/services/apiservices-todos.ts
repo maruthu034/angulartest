@@ -1,60 +1,68 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/Rx';
-import { Todosinformation } from '../interfaces/todosdetails';
+import { Todosinformation } from '../services/todosdetails';
 
 
 @Injectable()
 export class ApiServiceTodos {
-    todosinformation: Todosinformation;
-    headers: Headers;
-    options: RequestOptions;
 
-    private _postsURL = 'https://jsonplaceholder.typicode.com/todos';
-    constructor(private http: Http) {
-        this.headers = new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'q=0.8;application/json;q=0.9'
-        });
-        this.options = new RequestOptions({ headers: this.headers });
-    }
+    private todoURL = 'http://localhost:3000/users';
+    constructor(private http: Http) { }
 
     gettodosInformation(): Observable<Todosinformation[]> {
         return this.http
-            .get(this._postsURL)
-            .map((response: Response) => {
-                return <Todosinformation[]>response.json();
-            })
+            .get(this.todoURL)
+            .map(this.extractData)
             .catch(this.handleError);
     }
 
-    gettodosInformations(id: number): Observable<Todosinformation> {
-        return this.gettodosInformation()
-            // tslint:disable-next-line:no-shadowed-variable
-            .map(Todosinformation => Todosinformation.find(todosinformation => todosinformation.id === id))
+    // Fetch article by id
+    getTodoById(todoId: string): Observable<Todosinformation> {
+        const cpHeaders = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: cpHeaders });
+        console.log(this.todoURL + '/' + todoId);
+        return this.http.get(this.todoURL + '/' + todoId)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    // create todo information
+    createTodo(todosinformation: Todosinformation): Observable<number> {
+        console.log('inside todo working fine', this.todoURL, todosinformation);
+        const cpHeaders = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: cpHeaders });
+        return this.http.post(this.todoURL, todosinformation, options)
+            .map(success => success.status)
+            .catch(this.handleError);
+
+    }
+
+
+    //  Update article
+    updateArticle(todosinformation: Todosinformation): Observable<number> {
+        const cpHeaders = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: cpHeaders });
+        return this.http.put(this.todoURL + '/' + todosinformation.id, todosinformation, options)
+            .map(success => success.status)
+            .catch(this.handleError);
+    }
+
+    // Delete using todo ID
+    deleteTodoById(todoId: string): Observable<number> {
+        alert('comeinghere for delete purbose');
+        const cpHeaders = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: cpHeaders });
+        return this.http.delete(this.todoURL + '/' + todoId)
+            .map(success => success.status)
             .catch(this.handleError);
     }
 
 
-    // updateService(url: string, param: any): Observable<any> {
-    //     const body = JSON.stringify(param);
-    //     return this.http
-    //         .put(url, body, this.options)
-    //         .map((response: Response) => {
-    //             return <Todosinformation[]>response.json();
-    //         })
-    //         .catch(this.handleError);
-    // }
-
-    // deleteServiceWithId(url: string, key: string, val: string): Observable<any> {
-    //     return this.http
-    //         .delete(url + '/?' + key + '=' + val, this.options)
-    //         .map((response: Response) => {
-    //             return <Todosinformation[]>response.json();
-    //         })
-    //         .catch(this.handleError);
-    // }
+    private extractData(res: Response) {
+        const body = res.json();
+        return body;
+    }
 
     private handleError(error: Response) {
         return Observable.throw(error.statusText);

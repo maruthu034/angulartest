@@ -1,11 +1,64 @@
+<!-- <h3 *ngIf="todoIdToUpdate; else create">
+  Update Todo for Id: {{todoIdToUpdate}}
+</h3>
+<ng-template #create>
+  <h3> Create New Todo </h3>
+</ng-template>
+
+<form [formGroup]="TodoForm" (ngSubmit)="onTodoFormSubmit()">
+  UserId:
+  <input formControlName="userId" placeholder="Enter userId">
+  <div *ngIf="userId.errors && processValidation != null && !processValidation" [ngClass]="'error'">
+    <div *ngIf="userId.errors.required">
+      Name must required.
+    </div>
+    <div *ngIf="userId.errors.minlength">
+      Name must be at least 2 characters long.
+    </div>
+    <div *ngIf="userId.errors.maxlength">
+      Name can be max 2 characters long.
+    </div>
+  </div>
+  <br/>
+  <br/> Enter Title:
+  <input formControlName="title" placeholder="Enter title">
+  <div *ngIf="title.errors && processValidation != null && !processValidation" [ngClass]="'error'">
+    <div *ngIf="title.errors.required">
+      Title must required.
+    </div>
+    <div *ngIf="title.errors.minlength">
+      Title must be at least 6 characters long.
+    </div>
+    <div *ngIf="title.errors.maxlength">
+      Title can be max 150 characters long.
+    </div>
+  </div>
+
+  <br/>
+  <br/> Enter Category:
+  <select formControlName="completed">
+    <option *ngFor="let yesorno of complete" [ngValue]="yesorno.status">
+      {{ yesorno.status }}
+    </option>
+  </select>
+  <div *ngIf="completed.invalid && processValidation != null && !processValidation" [ngClass]="'error'">
+    Gender required.
+  </div>
+  <br/>
+  <br/>
+  <button *ngIf="!todoIdToUpdate">CREATE</button>
+  <button *ngIf="todoIdToUpdate">UPDATE</button>
+  <button (click)="backToCreateTodo()" *ngIf="todoIdToUpdate">Go Back</button>
+</form> -->
+
 <div class="table-height row">
-  <h1>{{title | uppercase}}</h1>
+  <h1>{{titlehead | uppercase}}</h1>
   <div class="col-xs-12 col-md-12 col-lg-6 col-xl-12">
     <table class="table table-compact">
       <thead>
         <tr>
-          <th>userId</th>
           <th>id</th>
+          <th>userId</th>
           <th>title</th>
           <th>completed</th>
           <th>Edit</th>
@@ -13,39 +66,72 @@
         </tr>
       </thead>
       <tbody>
-       <tr *ngFor="let todos of usertodos" [class.selected]='selectedTodos' >
-           <td >{{todos.userId}}</td>
+        <tr *ngFor="let todos of usertodos" [class.selected]='selectedTodos'>
           <td>{{todos.id}}</td>
+          <td>{{todos.userId}}</td>
           <td>{{todos.title}}</td>
           <td>{{todos.completed}}</td>
-          <td><clr-icon shape="pencil" [routerLink]="['/todos-detail', todos.id]" (click)="onSelect(todos)"></clr-icon></td>
-          <td><clr-icon shape="trash" (click)="delete($event)"> </clr-icon></td>
+          <td>
+            <clr-icon shape="pencil" (click)="editTodoUser(todos.id)"></clr-icon>
+          </td>
+          <td>
+            <clr-icon shape="trash" (click)="deleteTodoUser(todos.id)"> </clr-icon>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-
-
-  
-
-
-  <app-details-component [todosinformation]="selectedtodos"></app-details-component>
-  <!-- <form>
+  <form class="form" [formGroup]="TodoForm" (ngSubmit)="onTodoFormSubmit()" [hidden]="submitted">
     <section class="form-block">
-      <label>Add New Todos</label>
+      <label>
+        <h3 *ngIf="todoIdToUpdate; else create">
+          Update Todo for Id: {{todoIdToUpdate}}
+        </h3>
+        <ng-template #create>
+          <h3> Create New Todo </h3>
+        </ng-template>
+      </label>
       <div class="form-group">
-        <label class="required">Todos</label>
-        <label for="validInput1" aria-haspopup="false" role="tooltip" class="tooltip tooltip-validation invalid tooltip-sm">
-                  <input type="text" id="validInput1">
-                  <span class="tooltip-content">
-                      This field cannot be empty!
-                  </span>
-              </label>
+        <label for="empFullName">userId</label>
+        <label for="empFullName" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation tooltip-sm" [class.invalid]="TodoForm.get('userId').invalid
+                      && (TodoForm.get('userId').dirty || TodoForm.get('userId').touched)">
+          <input id="empFullName" type="text" formControlName="userId">
+          <span class="tooltip-content">
+            Name is required.
+          </span>
+        </label>
       </div>
-    </section>
-    <button type="submit" class="btn btn-primary">Ok</button>
-    <button type="submit" class="btn btn-secondary">Cancel</button>
-  </form>
-</div> -->
 
+
+      <div class="form-group">
+        <label for="empFullTitle">Title</label>
+        <label for="empFullTitle" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation tooltip-sm" [class.invalid]="TodoForm.get('title').invalid
+                        && (TodoForm.get('title').dirty || TodoForm.get('title').touched)">
+          <input id="empFullTitle" type="text" formControlName="title">
+          <span class="tooltip-content">
+            Name is required.
+          </span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="empComplete">Status</label>
+        <label for="empComplete" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation tooltip-sm" [class.invalid]="TodoForm.get('completed').invalid
+            && (TodoForm.get('completed').dirty || TodoForm.get('completed').touched)">
+          <select id="empComplete" formControlName="completed">
+            <option *ngFor="let yesorno of complete" [ngValue]="yesorno.status">
+              {{ yesorno.status }}
+            </option>
+          </select>
+          <span class="tooltip-content">
+            Country is required.
+          </span>
+        </label>
+      </div>
+      <button class="btn btn-primary" [disabled]="TodoForm.invalid" *ngIf="!todoIdToUpdate">CREATE</button>
+      <button class="btn btn-primary" *ngIf="todoIdToUpdate">UPDATE</button>
+      <button class="btn btn-primary" (click)="backToCreateTodo()" *ngIf="todoIdToUpdate">Go Back</button>
+    </section>
+  </form>
+</div>

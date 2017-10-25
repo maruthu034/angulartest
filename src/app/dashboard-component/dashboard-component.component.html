@@ -1,21 +1,46 @@
-
-<h1>{{title | uppercase}}</h1>
+<h1> {{title | uppercase}}</h1>
 <div class="main-container">
   <div class="row">
-    <div *ngFor="let user of _userArray"  [class.selected]="selectedUser"  class="col-lg-4 col-md-6 col-sm-4 col-xs-4">
+    <div *ngFor="let user of userArray" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <div class="card">
+        <div class="card-header">
+          {{user.name}}
+        </div>
         <div class="card-block">
-          <h3 class="card-title">{{user.name}}</h3>
-          <p class="card-text">
-            <b>{{user.website}}</b>
-          </p>
+          <div class="card-title">
+            {{user.username}}
+          </div>
+          <div class="card-text">
+            <b> Email: </b>
+            {{user.email}}
+            <br>
+
+            <b> Address:</b>
+            {{user.address.street}}
+            <br> {{user.address.suite}}
+            <br> {{user.address.city}}
+            <br> {{user.address.zipcode}}
+            <br>
+
+            <b> Phone:</b>
+            {{user.phone}}
+            <br>
+
+            <b>Website:</b>
+            {{user.website}}
+            <br>
+
+            <b> Company:</b>
+            {{user.company.name}}
+            <br> {{user.company.catchPhrase}}
+            <br> {{user.company.bs}}
+            <br>
+
+          </div>
         </div>
         <div class="card-footer">
-          <a (click)="onSelect(user)"  [routerLink]="['/detail', user.id]" class="btn btn-primary">View Todos</a>
+          <button (click)="onSelect($event)" class="btn btn-sm btn-link"> View Todos</button>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- <app-details-component [userinformation]="selectedUser"></app-details-component> -->
